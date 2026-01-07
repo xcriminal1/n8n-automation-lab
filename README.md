@@ -4,7 +4,7 @@ My personal library of production-ready n8n workflows. This repo includes AI-pow
 
 # 🛡️ IP Threat Intelligence Report — n8n Automation
 
-![Workflow Preview](image.png)
+![Workflow Preview](IP Threat.png)
 
 ## 📌 Overview
 
@@ -119,4 +119,61 @@ These components are modular and can be customized.
 This repository **does not include any credentials or API keys.**
 
 You must configure your own credentials in n8n.
+
+
+
+# 📰 Social Media Automation – Text Generation (n8n)
+
+![Workflow Preview](Social.png)
+## 📌 Overview
+This project is an automated cybersecurity news bot built using **n8n + Groq AI**.  
+Every 6 hours, the workflow fetches cybersecurity news from RSS feeds, summarizes each article using AI, generates relevant hashtags, and posts the update to **Slack and Telegram**.
+
+Ideal for security teams, awareness channels, and tech communities.
+
+## 🧠 Key Features
+- ⏱ Scheduled execution every 6 hours  
+- 🤖 AI-generated summaries  
+- 🏷 Automatic hashtag creation  
+- 🧹 Clean formatted messages  
+- 📣 Publishes to Slack & Telegram  
+- 🔁 Loops through each RSS article  
+
+## 🏗 Workflow Steps
+1. Trigger — Every 6 hours  
+2. Fetch cybersecurity RSS feed  
+3. Loop through each article  
+4. AI summarizes the story  
+5. Hashtags are generated  
+6. Content is formatted  
+7. Message is published to Slack & Telegram  
+
+## 📲 Example Output
+🛡 Cybersecurity Update
+
+**Title:** …  
+**Summary:** …  
+**Source:** …  
+
+#cybersecurity #infosec #threathunting  
+
+## 🧩 Tech Stack
+- n8n  
+- Groq AI  
+- RSS Feeds  
+- Slack API  
+- Telegram API  
+
+## 🔐 Security
+No credentials or API keys are stored in this repo.  
+Configure secrets securely inside n8n.
+
+## 🚀 Usage
+1. Import the workflow JSON  
+2. Add your credentials  
+3. Activate the workflow  
+4. Done 🎯  
+
+
+
 

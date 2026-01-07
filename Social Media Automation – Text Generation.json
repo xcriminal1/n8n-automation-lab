@@ -1,0 +1,317 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -2656,
+        32
+      ],
+      "id": "1c5bb5cc-89a7-45e2-ba9f-7cece40f0cfe"
+    },
+    {
+      "parameters": {
+        "url": "https://medium.com/feed/tag/technology",
+        "options": {}
+      },
+      "name": "Fetch RSS",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        -2464,
+        32
+      ],
+      "id": "a6c809f7-a4e8-462d-8df7-c0d9620b18ea"
+    },
+    {
+      "parameters": {
+        "url": "https://api.datamuse.com/words",
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "ml",
+              "value": "={{$json.output}}"
+            },
+            {
+              "name": "max",
+              "value": "4"
+            },
+            {
+              "name": "md",
+              "value": "p"
+            }
+          ]
+        }
+      },
+      "name": "Generate Hashtags",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        -1520,
+        32
+      ],
+      "id": "7d9a542e-1489-43ed-ae3b-82c6d02057bd"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1904,
+        304
+      ],
+      "id": "06f431a8-195d-4d42-b884-de3310f40b6f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a social media content assistant.\n\nCreate a short, professional LinkedIn-style post based on this article.\n\nTitle: {{$json.title}}\nSummary: {{$json.contentSnippet}}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1904,
+        0
+      ],
+      "id": "d2607776-eaae-496b-ba06-8e921296005b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.all();\n\n// Datamuse returns an array inside json, so flatten i\nconst hashtags = input\n  .flatMap(item => Array.isArray(item.json) ? item.json : [item.json])\n  .map(obj => obj.word)\n  .filter(word => typeof word === 'string' && word.length > 2)\n  .slice(0, 5)\n  .map(word => `#${word.replace(/\\s+/g, '')}`)\n  .join(' ');\n\nreturn [\n  {\n    json: {\n      hashtags\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1296,
+        32
+      ],
+      "id": "9702d3c2-ddb2-4bac-a113-8e3f2b43685b",
+      "name": "Format Hashtags"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// 1️⃣ Read AI Agent output SAFELY\nconst aiText = $node[\"AI Agent\"].json.output;\n\n// 2️⃣ Read GLOBAL hashtags\nconst hashtags = $node[\"Format Hashtags\"].json.hashtags || \"\";\n\n// 3️⃣ Safety check\nif (!aiText) {\n  return {\n    json: {\n      tweet: \"⚠️ AI output missing\"\n    }\n  };\n}\n\n// 4️⃣ Merge for Twitter\nreturn {\n  json: {\n    tweet: `${aiText}\\n\\n${hashtags}`\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1072,
+        32
+      ],
+      "id": "68287129-d68c-4c89-9dbf-93436b37b130",
+      "name": "Merge Content1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2256,
+        32
+      ],
+      "id": "158134ec-1d53-40d7-bb7c-df36ac369a70",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        96
+      ],
+      "id": "f021575f-ed94-4183-9f2c-3b55db54bde1"
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=🐦 *Post Ready*  {{$json.tweet}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -848,
+        176
+      ],
+      "id": "92520e24-afdd-4fe4-9f26-73c76d5b909d",
+      "name": "Send a text message",
+      "webhookId": "YOUR_TELEGRAM_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "YOUR_SLACK_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "social"
+        },
+        "text": "=🐦 *Post Ready*  {{$json.tweet}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -848,
+        -80
+      ],
+      "id": "f7b54a75-eab7-451f-9771-fe7cbd7538ad",
+      "name": "Send a message",
+      "webhookId": "YOUR_SLACK_WEBHOOK_ID",
+      "credentials": {
+        "slackApi": {
+          "id": "YOUR_SLACK_CREDENTIAL_ID",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": {
+      "main": [
+        [
+          {
+            "node": "Fetch RSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch RSS": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Hashtags": {
+      "main": [
+        [
+          {
+            "node": "Format Hashtags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate Hashtags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Hashtags": {
+      "main": [
+        [
+          {
+            "node": "Merge Content1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Content1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID"
+  }
+}
