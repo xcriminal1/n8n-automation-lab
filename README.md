@@ -2,9 +2,27 @@
 My personal library of production-ready n8n workflows. This repo includes AI-powered automations, API pipelines, YouTube tools, and cloud integrations — all designed to save time and simplify complex tasks.
 
 
+# 📂 Project Index
+
+Welcome to my collection of cybersecurity & automation workflows built using **n8n + AI**.  
+Click any project below to jump directly to it 👇
+
+## 🔗 Projects
+
+1️⃣ **[IP Threat Intelligence Report](#-ip-threat-intelligence-report--n8n-automation)**  
+Automated OSINT-driven IP risk analysis & enrichment workflow.
+
+2️⃣ **[AI Cybersecurity News Broadcaster](#-ai-cybersecurity-news-broadcaster-n8n)**  
+Fetches security news, summarizes with AI, and posts to Slack & Telegram.
+
+3️⃣ **[MCP Cybersecurity AI Chatbot System](#-mcp-cybersecurity-ai-chatbot-system-n8n)**  
+AI-powered cybersecurity assistant built across multiple workflows.
+
+
+
 # 🛡️ IP Threat Intelligence Report — n8n Automation
 
-![Workflow Preview](IP Threat.png)
+![Workflow Preview](IP_Threat.png)
 
 ## 📌 Overview
 
@@ -220,7 +238,7 @@ This project is useful for:
 Main entry chatbot  
 Receives user questions and decides routing.
 
-![Workflow Preview](MCP Cybersecurity AI Chatbot.png)
+![Workflow Preview](MCP_Cybersecurity_AI_Chatbot.png)
 
 ### 2️⃣ **Threat Intel Tool**
 Used when a question requires:
@@ -228,17 +246,17 @@ Used when a question requires:
 - Security lookup  
 - Threat analysis  
 
-![Workflow Preview](Threat Intel Tool.png)
+![Workflow Preview](Threat_Intel_Tool.png)
 
 ### 3️⃣ **MCP Tool Workflow**
 Handles chatbot tools / utilities and processing.
 
-![Workflow Preview](MCP Tool Workflow.png)
+![Workflow Preview](MCP_Tool_Workflow.png)
 
 ### 4️⃣ **Data Reader Workflow**
 Reads stored data safely when needed.
 
-![Workflow Preview](Data Reader Workflow.png)
+![Workflow Preview](Data_Reader_Workflow.png)
 
 ### 5️⃣ **Feed_Storage**
 Stores cybersecurity feeds & references used by the bot.
