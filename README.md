@@ -177,3 +177,117 @@ Configure secrets securely inside n8n.
 
 
 
+# 🛡 MCP Cybersecurity AI Chatbot System (n8n)
+
+## 📌 Overview
+The **MCP Cybersecurity AI Chatbot System** is a complete multi-workflow cybersecurity assistant built using **n8n + AI**.  
+It is designed to answer cybersecurity questions, lookup security intelligence, process data, and help users understand security threats in simple language.
+
+This solution is made up of **five connected workflows that work together as one system**:
+
+1️⃣ MCP Cybersecurity AI Chatbot  
+2️⃣ Threat Intel Tool  
+3️⃣ MCP Tool Workflow  
+4️⃣ Data Reader Workflow  
+5️⃣ Feed_Storage  
+
+Together they form an **AI-powered cybersecurity knowledge assistant**.
+
+This project is useful for:
+- Security learners  
+- Blue teams & SOC  
+- IT admins  
+- Help-desk & support  
+- Awareness training  
+- Tech communities  
+
+---
+
+## 🧠 Key Capabilities
+- 🤖 AI-powered cybersecurity Q&A  
+- 🔍 Threat intelligence lookup  
+- 📥 Secure data reading & processing  
+- 📰 Feed storage for reference  
+- 🧠 Context-aware responses  
+- 🚫 Rejects unrelated questions  
+- 💬 Can integrate with chat platforms (Telegram / Slack)
+
+---
+
+## 🏗 System Workflow (High-Level)
+
+### 1️⃣ **MCP Cybersecurity AI Chatbot**
+Main entry chatbot  
+Receives user questions and decides routing.
+
+![Workflow Preview](IP Threat.png)
+
+### 2️⃣ **Threat Intel Tool**
+Used when a question requires:
+- IP reputation  
+- Security lookup  
+- Threat analysis  
+
+![Workflow Preview](IP Threat.png)
+
+### 3️⃣ **MCP Tool Workflow**
+Handles chatbot tools / utilities and processing.
+
+![Workflow Preview](IP Threat.png)
+
+### 4️⃣ **Data Reader Workflow**
+Reads stored data safely when needed.
+
+![Workflow Preview](IP Threat.png)
+
+### 5️⃣ **Feed_Storage**
+Stores cybersecurity feeds & references used by the bot.
+
+![Workflow Preview](IP Threat.png)
+
+All workflows are designed to operate **together as a modular system**.
+
+---
+
+## 🎯 Example Questions It Can Answer
+- What is ransomware?  
+- What is phishing?  
+- What is a firewall?  
+- What is a CVE?  
+- How does Nmap work?  
+- What is malware?  
+
+And more…
+
+Unrelated topics are rejected politely to keep the system focused.
+
+---
+
+## 🧩 Tech Stack
+- n8n  
+- AI LLM model (Groq / Gemini etc.)  
+- OSINT feeds  
+- Data processing pipelines  
+- Optional chat integrations  
+
+---
+
+## 🔐 Security
+This repository does **not** include:
+- API keys  
+- credentials  
+- private data  
+
+All secrets must be configured securely inside n8n.
+
+---
+
+## 🚀 Setup & Usage
+1. Import all 5 workflows  
+2. Configure AI + API credentials  
+3. Enable workflows  
+4. Connect to a chat platform  
+5. Start chatting securely 🛡
+
+---
+
