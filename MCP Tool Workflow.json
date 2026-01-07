@@ -1,0 +1,133 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "path": "YOUR_MCP_WEBHOOK_ID"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        -128
+      ],
+      "id": "99dddc4c-c5f2-4f38-8d14-c618bf86c5c8",
+      "name": "get_threat_feed",
+      "webhookId": "YOUR_MCP_WEBHOOK_ID",
+      "notes": "Searches stored RSS threat data from the n8n Sheet and returns relevant entries.\n"
+    },
+    {
+      "parameters": {
+        "description": "Search threat-intel RSS feed and return JSON results.",
+        "workflowId": {
+          "__rl": true,
+          "value": "YOUR_DATA_READER_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/YOUR_DATA_READER_WORKFLOW_ID",
+          "cachedResultName": "Data Reader Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "firewall"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        240
+      ],
+      "id": "4494f6a0-15b4-49b1-b40c-d826369dc900",
+      "name": "Call 'Data Reader Workflow'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "YOUR_THREAT_INTEL_TOOL_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/YOUR_THREAT_INTEL_TOOL_WORKFLOW_ID",
+          "cachedResultName": "Threat Intel Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "nist"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        224
+      ],
+      "id": "ccbeff12-022f-4fdc-840d-6b858318970a",
+      "name": "Call 'Threat Intel Tool'"
+    }
+  ],
+  "connections": {
+    "Call 'Data Reader Workflow'": {
+      "ai_tool": [
+        [
+          {
+            "node": "get_threat_feed",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Threat Intel Tool'": {
+      "ai_tool": [
+        [
+          {
+            "node": "get_threat_feed",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID"
+  }
+}

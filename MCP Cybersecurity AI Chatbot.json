@@ -1,0 +1,188 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "❌ This question is out of scope. I only answer cybersecurity-related queries.\n",
+        "additionalFields": {}
+      },
+      "id": "544aabad-896f-4d69-9616-fd20596de9ce",
+      "name": "Send Telegram Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        512,
+        -384
+      ],
+      "webhookId": "YOUR_TELEGRAM_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -560,
+        -368
+      ],
+      "id": "cd53591f-8282-4e2e-b7ff-ed7b2a41f0e6",
+      "name": "When chat message received",
+      "webhookId": "YOUR_CHAT_TRIGGER_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Cyber Threat Intelligence assistant.\n\nIf the user asks about cyber threats, vulnerabilities, exploits,\nrisks, CVEs, malware, ransomware, or security news,\ncall the tool \"Threat Intel Tool\" with a relevant keyword\nfrom their request.\n\nReturn the tool summary to the user in a helpful tone.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -352,
+        -368
+      ],
+      "id": "9763c561-33b8-4a52-8652-69a3374ab647",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        0
+      ],
+      "id": "b88a1941-7c1f-4f0c-93e9-551285fda1e9",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        96
+      ],
+      "id": "5c546b3a-349e-4848-a9ab-d676a05b42d8",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://n8n.YOUR_DOMAIN/mcp/YOUR_MCP_WEBHOOK_ID",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        -176,
+        -32
+      ],
+      "id": "5d60f937-7b2a-4987-aba5-81a1e63b93fb",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json.results || [];\n\nlet message = `🛡 Cyber Threat Intel Update\\n\\n`;\nmessage += `Topic: ${$json.query || \"Security Update\"}\\n\\n`;\n\nif (!data.length) {\n  message += `🔎 Summary:\\nNo relevant new activity was detected in the last 24 hours.\\n\\n`;\n} else {\n\n  message += `🔎 Summary:\\n${data.length} relevant intelligence report(s) found.\\n\\n`;\n\n  message += `📌 Key Findings:\\n`;\n\n  data.forEach(r => {\n    message += `• ${r.title}\\n  Source: ${r.source || \"Unknown\"} — ${r.published}\\n  ${r.summary}\\n  🔗 ${r.link}\\n\\n`;\n  });\n}\n\nreturn [{ message }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -368
+      ],
+      "id": "bcbdebe2-481c-4cc7-8bb9-8ece39916d25",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID"
+  }
+}

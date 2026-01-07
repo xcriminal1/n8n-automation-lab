@@ -220,7 +220,7 @@ This project is useful for:
 Main entry chatbot  
 Receives user questions and decides routing.
 
-![Workflow Preview](IP Threat.png)
+![Workflow Preview](MCP Cybersecurity AI Chatbot.png)
 
 ### 2️⃣ **Threat Intel Tool**
 Used when a question requires:
@@ -228,22 +228,22 @@ Used when a question requires:
 - Security lookup  
 - Threat analysis  
 
-![Workflow Preview](IP Threat.png)
+![Workflow Preview](Threat Intel Tool.png)
 
 ### 3️⃣ **MCP Tool Workflow**
 Handles chatbot tools / utilities and processing.
 
-![Workflow Preview](IP Threat.png)
+![Workflow Preview](MCP Tool Workflow.png)
 
 ### 4️⃣ **Data Reader Workflow**
 Reads stored data safely when needed.
 
-![Workflow Preview](IP Threat.png)
+![Workflow Preview](Data Reader Workflow.png)
 
 ### 5️⃣ **Feed_Storage**
 Stores cybersecurity feeds & references used by the bot.
 
-![Workflow Preview](IP Threat.png)
+![Workflow Preview](Feed_Storage.png)
 
 All workflows are designed to operate **together as a modular system**.
 

@@ -1,0 +1,84 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "15fd7783-aede-4ef1-b131-db2f40511294",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "YOUR_DATATABLE_ID",
+          "mode": "list",
+          "cachedResultName": "cyber_rss_store",
+          "cachedResultUrl": "/projects/YOUR_PROJECT_ID/datatables/YOUR_DATATABLE_ID"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "018271d2-0b60-4399-8d1c-3b7a0b5d75ce",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get query from the \"When Executed by Another Workflow\" node\n// Try to read from trigger node name first\nlet q;\n\ntry {\n  q = $('When Executed by Another Workflow').first()?.json?.query;\n} catch (e) {\n  q = null;\n}\n\n// Fallback for tool / sub-workflow calls\nif (!q) {\n  q = $input.first()?.json?.query;\n}\n\n// Normalise text\nq = (q || \"\")\n  .toLowerCase()\n  .trim()\n  .replace(/^[\"']|[\"']$/g, \"\");\n\n// If still no query → return empty\nif (!q) {\n  return { results: [] };\n}\n\n// Split into meaningful words\nconst words = q\n  .replace(/[^\\w\\s]/g, \"\") \n  .split(/\\s+/)\n  .filter(w => w.length > 2);\n\n// Load ALL sheet rows from \"Get row(s)\" node\nconst rows = $('Get row(s)').all().map(item => item.json);\n\n// Filter rows where title OR summary contains ANY of the query words\nlet matches = rows.filter(r => {\n  const text = `${r.title||\"\"} ${r.summary||\"\"}`.toLowerCase();\n  return words.some(w => text.includes(w));\n});\n\n\n// Return first 10\nreturn { results: matches.slice(0, 2) };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "5d234067-7877-4807-bd16-e998dc9fe041",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "YOUR_INSTANCE_ID"
+  }
+}
