@@ -9,10 +9,10 @@ Click any project below to jump directly to it 👇
 
 ## 🔗 Projects
 
-1️⃣ **[IP Threat Intelligence Report](#-ip-threat-intelligence-report--n8n-automation)**  
+1️⃣ **[IP Threat Intelligence Report](#-ip-threat-intelligence-report)**  
 Automated OSINT-driven IP risk analysis & enrichment workflow.
 
-2️⃣ **[AI Cybersecurity News Broadcaster](#-ai-cybersecurity-news-broadcaster-n8n)**  
+2️⃣ **[Social Media Automation – Text Generation](#-social-media-automation--text-generation-n8n)**  
 Fetches security news, summarizes with AI, and posts to Slack & Telegram.
 
 3️⃣ **[MCP Cybersecurity AI Chatbot System](#-mcp-cybersecurity-ai-chatbot-system-n8n)**  
@@ -20,7 +20,7 @@ AI-powered cybersecurity assistant built across multiple workflows.
 
 
 
-# 🛡️ IP Threat Intelligence Report — n8n Automation
+# 🛡️ IP Threat Intelligence Report
 
 ![Workflow Preview](IP_Threat.png)
 
